@@ -20,26 +20,23 @@ This test requires me to develop a semantic segmentation model that is capable o
 
   - UNet Model Architecture: the goal of this model is to segment images by predicting a binary mask, where each pixel is classified as belonging to a foreground object or the background. In this case, the model takes an input image of size (3, H, W) (with 3 channels for RGB images), and outputs a binary mask of size (1, H, W) where each pixel has a probability value between 0 and 1, representing the likelihood that the pixel belongs to the foreground object.
 
-Encoder (Downsampling Path): The encoder progressively reduces the spatial dimensions of the input while increasing the number of feature channels. It includes:
+    - Encoder (Downsampling Path): The encoder progressively reduces the spatial dimensions of the input while increasing the number of feature channels. It includes:
 
-Two convolutional layers followed by ReLU activations.
+      - Two convolutional layers followed by ReLU activations.
+      - Dropout layers after each ReLU activation to regularize the model by dropping a fraction of the neurons during training.
+      - MaxPooling layer to reduce the spatial dimensions by half, allowing the model to capture more abstract features at lower resolutions.
 
-Dropout layers after each ReLU activation to regularize the model by dropping a fraction of the neurons during training.
-MaxPooling layer to reduce the spatial dimensions by half, allowing the model to capture more abstract features at lower resolutions.
+    - Decoder (Upsampling Path): The decoder path mirrors the encoder, but instead of downsampling, it upscales the feature maps back to the original image size. It includes:
 
-Decoder (Upsampling Path): The decoder path mirrors the encoder, but instead of downsampling, it upscales the feature maps back to the original image size. It includes:
-
-Transposed convolution (also known as deconvolution) for upsampling the feature maps, increasing their spatial dimensions.
-ReLU activations followed by Dropout to regularize the upsampling process.
-
-A final convolution layer with a Sigmoid activation, which outputs a single-channel probability mask, where each pixel represents the likelihood of being foreground.
+      - Transposed convolution (also known as deconvolution) for upsampling the feature maps, increasing their spatial dimensions.
+      - ReLU activations followed by Dropout to regularize the upsampling process.
+      - A final convolution layer with a Sigmoid activation, which outputs a single-channel probability mask, where each pixel represents the likelihood of being foreground.
 
   - Loss Functions: tried Dice Loss, Focal Loss and Combined Loss. 
 
   - Training: 
-In each epoch, the model performs forward passes on the input data, computes the loss, backpropagates the gradients, and updates the model weights using the Adam optimizer. 
-
-The model is trained for a specified number of epochs, and the average loss per epoch is printed for monitoring training progress.
+    - In each epoch, the model performs forward passes on the input data, computes the loss, backpropagates the gradients, and updates the model weights using the Adam optimizer. 
+    - The model is trained for a specified number of epochs, and the average loss per epoch is printed for monitoring training progress.
 
 - Evaluation Metrics: IoU, Accuracy, Precision, Recall, F1-score
   - After training, the model is evaluated using a variety of metrics such as IoU, Dice Coefficient, Precision, Recall, and F1 Score.
@@ -65,15 +62,15 @@ The model is trained for a specified number of epochs, and the average loss per 
   - Validation Recall: 0.8684
   - Validation F1 Score: 0.1964
 
-IoU measures the overlap between the predicted mask and the true mask. The value of 0.1124 means the overlap between the predicted mask and the true mask is very low, suggesting that the model is not performing well in identifying the correct regions.
+  - IoU measures the overlap between the predicted mask and the true mask. The value of 0.1124 means the overlap between the predicted mask and the true mask is very low, suggesting that the model is not performing well in identifying the correct regions.
 
-Similar to IoU, the Dice Coefficient measures overlap, but it is a bit more sensitive to smaller object regions. A value of 0.1964 indicates low overlap between the predicted and true masks, similar to the IoU result.
+  - Similar to IoU, the Dice Coefficient measures overlap, but it is a bit more sensitive to smaller object regions. A value of 0.1964 indicates low overlap between the predicted and true masks, similar to the IoU result.
 
-Precision is the proportion of correctly predicted positive pixels (true positives) out of all pixels predicted as positive. A value of 0.1142 suggests that only around 11.42% of the pixels predicted as "foreground" (buildings) by the model were actually correct. This means the model is predicting a lot of false positives (incorrectly classifying background as buildings).
+  - Precision is the proportion of correctly predicted positive pixels (true positives) out of all pixels predicted as positive. A value of 0.1142 suggests that only around 11.42% of the pixels predicted as "foreground" (buildings) by the model were actually correct. This means the model is predicting a lot of false positives (incorrectly classifying background as buildings).
 
-Recall measures the proportion of actual positive pixels that the model correctly identified. The very high value of 0.8684 means that the model is predicting the majority of  actual positives but is likely over-predicting, as seen by the very low precision.
+  - Recall measures the proportion of actual positive pixels that the model correctly identified. The very high value of 0.8684 means that the model is predicting the majority of  actual positives but is likely over-predicting, as seen by the very low precision.
 
-The F1 Score is the harmonic mean of precision and recall. It balances the two metrics, providing a single measure of the model's accuracy. A value of 0.1964 is low, reflecting the poor balance between precision and recall. While recall is very high, the low precision drags down the F1 score.
+  - The F1 Score is the harmonic mean of precision and recall. It balances the two metrics, providing a single measure of the model's accuracy. A value of 0.1964 is low, reflecting the poor balance between precision and recall. While recall is very high, the low precision drags down the F1 score.
 
 - A packaged tool that allows the user to run the inference and view the results
   - In order to run the notebook and script successfully in a conda environment, you need to install necessary dependencies: torch, numpy, matplotlib, import_ipynb. Refer to requirement.txt.
