@@ -1,5 +1,4 @@
 # Overview
-This project is a response to a test assignment from datel to assess the competence of candidates for ML Expert.
 
 This test requires me to develop a semantic segmentation model that is capable of identifying pixel regions of buildings from satellite images. Specifically, I need to process and model a Python pickle file containing satellite images and corresponding mask data. The task can be divided into several key steps involving data processing, model training, evaluation and packaging. 
 
